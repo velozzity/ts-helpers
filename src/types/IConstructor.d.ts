@@ -15,4 +15,4 @@
  * @template InstanceInterface
  */
 
-export type IConstructor<InstanceInterface> = new (...args : any[])  => InstanceInterface;
+export type IConstructor<InstanceInterface> = new (...args: any[]) => InstanceInterface;
