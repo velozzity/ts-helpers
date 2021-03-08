@@ -1,8 +1,7 @@
-// tslint:disable:ban-templates
-
 import Sanitizer from 'sanitize-html';
-import ILooseObject from "../interfaces/ILooseObject";
+import ILooseObject from "./interfaces/ILooseObject";
 import Files from "./Files";
+import * as fs from "fs";
 
 
 const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
@@ -18,7 +17,7 @@ export const capitalize = (_string: string): string => {
     return _string.charAt(0).toUpperCase() + _string.slice(1);
 };
 
-export const lowerlize = (_string: string): string => {
+export const lowerize = (_string: string): string => {
     return _string.charAt(0).toLowerCase() + _string.slice(1);
 };
 
@@ -41,7 +40,7 @@ export const saveLogToFile = (log: string, filePath: string) => {
 
 export const getParamNames = (func: Function): string[] => {
     const fnStr: string = func.toString().replace(STRIP_COMMENTS, '');
-    let result: string[] = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+    let result: RegExpMatchArray | null = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
     if (result === null) result = [];
     return result;
 };
@@ -62,16 +61,16 @@ export const objectFilterIn = (obj: ILooseObject, key: string): ILooseObject => 
     return result;
 };
 
-export const log = (logData: any, filePath:string = "/log/"): void => {
+export const log = (logData: any, filePath: string = "/log/"): void => {
     saveLogToFile("|***LOG***|\n" + logData.toString() + "\n", filePath);
 };
 
-export const _either = <T>(either: T, or: T, _default?: T): T => (either) ? either : ((or) ? or : _default);
+export const _either = <T>(either: T, or: T, _default?: T): T | undefined => (either) ? either : ((or) ? or : _default);
 
-export const sanitizeObjValues = (obj:ILooseObject):ILooseObject=>{
+export const sanitizeObjValues = (obj: ILooseObject): ILooseObject => {
     for (const [key, value] of Object.entries(obj)) {
-        if(isObject(obj[key])) sanitizeObjValues(obj[key]);
-        else{
+        if (isObject(obj[key])) sanitizeObjValues(obj[key]);
+        else {
             obj[key] = Sanitizer(value, sanitizerOptions).toString().trim();
         }
     }
@@ -85,9 +84,11 @@ export const sanitizeString = (value: string): string => {
 
 export default {
     capitalize,
-    lowerlize,
+    lowerize,
     getParamNames,
     objectFilterOut,
     objectFilterIn,
-    log
+    log,
+    sanitizeString,
+    either: _either
 };

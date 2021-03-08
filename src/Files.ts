@@ -26,7 +26,7 @@ export const fileExists = (path: string, name: string): boolean => {
     return Fs.existsSync(path + name);
 };
 
-export const projectBaseDir = (path?: string): string => {
+export const projectBaseDir = (path: string = ''): string => {
     return Path.join(process.cwd(), path);
 };
 

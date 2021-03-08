@@ -1,6 +1,4 @@
-/* tslint:disable:prefer-for-of */
-
-import IMessageObject from "../interfaces/IMessageObject";
+import IMessageObject from "./interfaces/IMessageObject";
 
 export const NOT_ENOUGH_ARGS_NAMED_ERROR = (...args: string[]):string => {
         const message = "Not enough arguments given, command takes: \n";

@@ -1,8 +1,8 @@
 // tslint:disable:no-console
 
-import IEcho from "../interfaces/IEcho";
+import IEcho from "./interfaces/IEcho";
 import chalk from "chalk";
-// @ts-ignore
+import Figlet from 'figlet';
 
 export default class Echo extends IEcho{
     static success = (message:any): void => {
@@ -30,8 +30,6 @@ export default class Echo extends IEcho{
     };
 
     static header =  (message:any): void => {
-        Figlet.parseFont('Standard', standard);
-
         console.log(
             chalk.blueBright(
                 Figlet.textSync(message, {horizontalLayout: 'full'})
