@@ -38,7 +38,7 @@ export const saveLogToFile = (log: string, filePath: string) => {
     });
 };
 
-export const getParamNames = (func: Function): string[] => {
+export const getParamNames = (func: (...args: any) => any): string[] => {
     const fnStr: string = func.toString().replace(STRIP_COMMENTS, '');
     let result: RegExpMatchArray | null = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
     if (result === null) result = [];
@@ -61,7 +61,7 @@ export const objectFilterIn = (obj: ILooseObject, key: string): ILooseObject => 
     return result;
 };
 
-export const log = (logData: any, filePath: string = "/log/"): void => {
+export const _log = (logData: any, filePath: string = "/log/"): void => {
     saveLogToFile("|***LOG***|\n" + logData.toString() + "\n", filePath);
 };
 
@@ -88,7 +88,7 @@ export default {
     getParamNames,
     objectFilterOut,
     objectFilterIn,
-    log,
     sanitizeString,
+    log: _log,
     either: _either
 };

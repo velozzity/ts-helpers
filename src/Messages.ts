@@ -3,8 +3,8 @@ import IMessageObject from "./interfaces/IMessageObject";
 export const NOT_ENOUGH_ARGS_NAMED_ERROR = (...args: string[]):string => {
         const message = "Not enough arguments given, command takes: \n";
         let argsString = "";
-        for(let i=0; i<args.length; i++){
-            argsString += args[i] +", ";
+        for(const arg of args){
+          argsString += arg +", ";
         }
         return message+argsString+"in that order.";
 };
