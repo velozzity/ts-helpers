@@ -1,7 +1,7 @@
 {
   "name": "@velozzity/ts-helpers",
   "version": "1.0.0",
-  "description": "a set of typescript helper functions used in common velozzity packages",
+  "description": "A set of typescript helper functions to be used in common velozzity packages.",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest --config jestconfig.json",
