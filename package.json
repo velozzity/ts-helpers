@@ -6,20 +6,21 @@
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
+    "postbuild": "cp package.json dist",
     "format": "prettier --write \"src/**/*.ts\" ",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
   },
   "files": [
     "dist/**/*"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/velozzity/ts-helpers.git"
+    "url": "https://github.com/velozzity/ts-helpers.git"
   },
   "keywords": [
     "helpers",
@@ -43,6 +44,9 @@
     "user": "0.0.0"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/exec": "^5.0.0",
+    "@semantic-release/git": "^9.0.0",
     "@types/ejs": "^3.0.6",
     "@types/figlet": "^1.2.1",
     "@types/fs-extra": "^9.0.8",
@@ -50,6 +54,7 @@
     "@types/sanitize-html": "^1.27.1",
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
+    "replace-json-property": "^1.6.3",
     "semantic-release": "^17.4.1",
     "ts-jest": "^26.5.3",
     "tslint": "^6.1.3",
