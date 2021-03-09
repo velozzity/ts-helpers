@@ -1,18 +1,20 @@
 {
   "name": "@velozzity/ts-helpers",
-  "version": "0.1.6",
+  "version": "0.1.",
   "description": "a set of typescript helper functions used in common velozzity packages",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
+    "postbuild": "cp package.json dist",
     "format": "prettier --write \"src/**/*.ts\" ",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "release": "npm run build && cd dist && npm publish"
   },
   "files": [
     "dist/**/*"
