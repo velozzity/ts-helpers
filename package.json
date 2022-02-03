@@ -1,6 +1,6 @@
 {
   "name": "@velozzity/ts-helpers",
-  "version": "0.1.0",
+  "version": "0.0.2",
   "description": "A set of typescript helper functions to be used in common velozzity packages.",
   "main": "dist",
   "scripts": {
