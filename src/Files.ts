@@ -4,7 +4,7 @@ import Fse from 'fs-extra';
 import Messages from './Messages';
 
 export const makeFile = (path: string, name: string, data?: string): boolean => {
-  const _path = name === '' ? path : path + '/' + name;
+  const _path = (name === '') ? path : path + '/' + name;
 
   if (data) Fse.writeFileSync(_path, data);
   else Fse.writeFileSync(_path, '');
@@ -26,17 +26,16 @@ export const fileExists = (path: string, name: string): boolean => {
   return Fs.existsSync(path + name);
 };
 
-export const projectBaseDir = (path: string = ''): string => {
-  return Path.join(process.cwd(), path);
+export const projectBaseDir = (...path: string[]): string => {
+  if(!path) path = [];
+  return Path.join(process.cwd(), ...path);
 };
 
 export const getDirFiles = (path: string): string[] => {
   if (!dirExists(path)) return [];
 
   const dirFiles: string[] = [];
-  Fs.readdirSync(path).forEach((file) => {
-    dirFiles.push(file);
-  });
+  Fs.readdirSync(path).forEach(file => {dirFiles.push(file);});
 
   return dirFiles;
 };
@@ -45,8 +44,20 @@ export const getDirModules = (path: string): string[] => {
   if (!dirExists(path)) throw Error(Messages.PATH_NONEXISTENT_ERROR(path));
 
   const dirModules: string[] = [];
-  Fs.readdirSync(path).forEach((file) => {
-    if (!Fse.lstatSync(path + '\\' + file).isDirectory()) dirModules.push(file.slice(0, -3));
+  Fs.readdirSync(path).forEach(file => {
+    if (!Fse.lstatSync(path + '/' + file).isDirectory()) dirModules.push(file.slice(0, -3));
+  });
+
+  return dirModules;
+};
+
+export const getDirModulesSubModules = (path: string): string[] => {
+  if (!dirExists(path)) throw Error(Messages.PATH_NONEXISTENT_ERROR(path));
+
+  const dirModules: string[] = [];
+  Fs.readdirSync(path).forEach(file => {
+    if (!Fse.lstatSync(path + '/' + file).isDirectory()) dirModules.push(file.slice(0, -3));
+    else dirModules.push(file);
   });
 
   return dirModules;
@@ -56,11 +67,15 @@ export const getDirs = (path: string): string[] => {
   if (!dirExists(path)) throw Error(Messages.PATH_NONEXISTENT_ERROR(path));
 
   const dirModules: string[] = [];
-  Fs.readdirSync(path).forEach((file) => {
-    if (Fse.lstatSync(path + '\\' + file).isDirectory()) dirModules.push(file);
+  Fs.readdirSync(path).forEach(file => {
+    if (isDir(path + '/' + file)) dirModules.push(file);
   });
 
   return dirModules;
+};
+
+export const isDir = (path: string) => {
+  return Fse.lstatSync(path).isDirectory();
 };
 
 export const getFileContents = (filePath: string): string => {
@@ -84,4 +99,5 @@ export default {
   getDirs,
   getFileContents,
   writeToFile,
+  getDirModulesSubModules
 };

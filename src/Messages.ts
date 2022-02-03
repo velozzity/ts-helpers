@@ -1,10 +1,12 @@
+/* tslint:disable:prefer-for-of */
+
 import IMessageObject from './interfaces/IMessageObject';
 
 export const NOT_ENOUGH_ARGS_NAMED_ERROR = (...args: string[]): string => {
   const message = 'Not enough arguments given, command takes: \n';
   let argsString = '';
-  for (const arg of args) {
-    argsString += arg + ', ';
+  for (let i = 0; i < args.length; i++) {
+    argsString += args[i] + ', ';
   }
   return message + argsString + 'in that order.';
 };
@@ -18,7 +20,17 @@ export const NO_COMMAND_GIVEN_ERROR = (possibleCommands: string): string => {
 };
 
 export const COMMAND_NONEXISTENT_ERROR = (commandGiven: string, possibleCommands: string): string => {
-  return `command ${commandGiven} does not exist. \n\nExisting commands are:\n${possibleCommands}`;
+  let msg = `command '${commandGiven}' does not exist. \n\n`;
+  const similarCommands = [];
+
+  for (const command of possibleCommands.split('\n')) {
+    if (command.includes(commandGiven)) similarCommands.push(command);
+  }
+
+  msg += (similarCommands.length > 0) ? 'Similar' : 'Existing';
+  if (similarCommands.length > 0) possibleCommands = similarCommands.join('\n');
+
+  return `${msg} commands are:\n${possibleCommands}`;
 };
 
 export const MODULE_NONEXISTENT_ERROR = (moduleGiven: string, possibleModules: string): string => {
@@ -26,7 +38,7 @@ export const MODULE_NONEXISTENT_ERROR = (moduleGiven: string, possibleModules: s
 };
 
 export const PATH_NONEXISTENT_ERROR = (filePath?: string): string => {
-  return `Path ${filePath} is does not exist.`;
+  return `Path ${filePath} does not exist.`;
 };
 
 export const FILE_NONEXISTENT_ERROR = (filePath?: string): string => {
@@ -35,16 +47,12 @@ export const FILE_NONEXISTENT_ERROR = (filePath?: string): string => {
 
 export const FILE_GENERATED_MESSAGE = (messageObj?: IMessageObject): string => {
   const msg = 'File generated.';
-  return messageObj
-    ? `${messageObj.type} file ${messageObj.className} generated at ${messageObj.relPath}.\nAbsolute file path at ${messageObj.absPath}`
-    : msg;
+  return (messageObj) ? `${messageObj.type} file ${messageObj.className} generated at ${messageObj.relPath}.\nAbsolute file path at ${messageObj.absPath}` : msg;
 };
 
 export const MODULE_GENERATED_MESSAGE = (messageObj?: IMessageObject): string => {
   const msg = 'Module generated.';
-  return messageObj
-    ? `${messageObj.type} module ${messageObj.className} generated at ${messageObj.relPath}.\nAbsolute file path at ${messageObj.absPath}`
-    : msg;
+  return (messageObj) ? `${messageObj.type} module ${messageObj.className} generated at ${messageObj.relPath}.\nAbsolute file path at ${messageObj.absPath}` : msg;
 };
 
 export default {

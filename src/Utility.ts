@@ -1,43 +1,29 @@
-import Sanitizer from 'sanitize-html';
+// tslint:disable:ban-templates
+
+import Os from 'os';
 import ILooseObject from './interfaces/ILooseObject';
-import Files from './Files';
-import * as fs from 'fs';
 
-const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
+const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 const ARGUMENT_NAMES = /([^\s,]+)/g;
-
-const sanitizerOptions: ILooseObject = {
-  allowedTags: [],
-  allowedAttributes: {},
-  disallowedTagsMode: 'recursiveEscape',
-};
 
 export const capitalize = (_string: string): string => {
   return _string.charAt(0).toUpperCase() + _string.slice(1);
 };
 
-export const lowerize = (_string: string): string => {
+export const capitalizeSentence = (_string: string): any => {
+  return _string.split(' ').map(str => capitalize(str)).join(' ');
+};
+
+export const lowerlize = (_string: string): string => {
   return _string.charAt(0).toLowerCase() + _string.slice(1);
 };
 
-export const isObject = (val: any) => {
-  if (val === null) {
-    return false;
-  }
-  return typeof val === 'function' || typeof val === 'object';
+export const stringIsEmail = (_string: string): boolean => {
+  const regEx = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return regEx.test(_string);
 };
 
-export const saveLogToFile = (log: string, filePath: string) => {
-  // create date
-  const date: Date = new Date();
-  const dateString: string = `${date.getDay()}-${date.getMonth() + 1}-${date.getFullYear()} (${date.toDateString()})`;
-  filePath = Files.projectBaseDir(process.env.DEV_LOG_DIR) + '\\' + dateString + '.log';
-  fs.appendFile(filePath, log, (err) => {
-    if (err) throw err;
-  });
-};
-
-export const getParamNames = (func: (...args: any) => any): string[] => {
+export const getParamNames = (func: Function): string[] => {
   const fnStr: string = func.toString().replace(STRIP_COMMENTS, '');
   let result: RegExpMatchArray | null = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
   if (result === null) result = [];
@@ -60,33 +46,35 @@ export const objectFilterIn = (obj: ILooseObject, key: string): ILooseObject => 
   return result;
 };
 
-export const _log = (logData: any, filePath: string = '/log/'): void => {
-  saveLogToFile('|***LOG***|\n' + logData.toString() + '\n', filePath);
+export const objectIsEmpty = (obj: ILooseObject): boolean => {
+  return obj && Object.keys(obj).length === 0 && obj.constructor === Object;
 };
 
-export const _either = <T>(either: T, or: T, _default?: T): T | undefined => (either ? either : or ? or : _default);
+export const randomHexString = (size: number): String => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
 
-export const sanitizeObjValues = (obj: ILooseObject): ILooseObject => {
-  for (const [key, value] of Object.entries(obj)) {
-    if (isObject(obj[key])) sanitizeObjValues(obj[key]);
-    else {
-      obj[key] = Sanitizer(value, sanitizerOptions).toString().trim();
+export const _either = <T> (either: T, or: T, _default?: T): T => ((either) ? either : ((or) ? or : _default) as T);
+
+export const baseURI = (fromOs = false) => {
+  return (process.env.BASE_URI && fromOs) ? process.env.BASE_URI : 'https://' + Os.hostname();
+};
+
+export const packIncludes = (includeName: string, obj: ILooseObject) => {
+  const packed: ILooseObject = {};
+  const keys = Object.keys(obj);
+  for (const key of keys) {
+    if (key.includes(includeName)) {
+      packed[key.replace(`${includeName}.`, '')] = obj[key];
     }
   }
-  return obj;
-};
-
-export const sanitizeString = (value: string): string => {
-  return Sanitizer(value, sanitizerOptions).toString().trim();
+  return packed[includeName] ? packed[includeName] : packed;
 };
 
 export default {
-  capitalize,
-  lowerize,
+  capitalizeFirstLetter: capitalize,
+  lowerlize,
   getParamNames,
   objectFilterOut,
   objectFilterIn,
-  sanitizeString,
-  log: _log,
-  either: _either,
+  objectIsEmpty,
+  _either,
 };
