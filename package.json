@@ -9,8 +9,7 @@
     "test": "jest --config jestconfig.json",
     "format": "prettier --write \"src/**/*.ts\" ",
     "lint": "tslint -p tsconfig.json",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint"
+    "prepare": "npm run build"
   },
   "files": [
     "dist/**/*"
@@ -24,7 +23,7 @@
     "typescript",
     "ts"
   ],
-  "author": "velozzity",
+  "author": "thedarkkid.codes@gmail.com",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/velozzity/ts-helpers/issues"
